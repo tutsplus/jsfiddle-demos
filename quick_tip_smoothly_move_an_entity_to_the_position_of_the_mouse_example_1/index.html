@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo by Gamedevtuts</title>
+  
+  <script type='text/javascript' src='createjs-2013.02.12.min.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="result-light.css">
+  
+  <style type='text/css'>
+    
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+window.onload=function(){
+var canvas = document.getElementById("Canvas");
+var ship;
+var stage;
+var assets;
+var loader;
+var serverString = "http://source.tutsplus.com/gamedev/authors/JamesTyner/SmoothMoves/";
+var stageHeight = 600;
+var stageWidth = 600;
+var shipHeight = 64;
+var shipWidth = 64;
+var easingAmount = 0.15;
+var text;
+stage = new createjs.Stage(canvas);
+assets = [];
+manifest = [{
+    src: serverString + "ship.png",
+    id: "character"
+}];
+
+loader = new createjs.LoadQueue(false);
+loader.onComplete = handleComplete;
+loader.onFileLoad = handleFileLoad;
+loader.loadManifest(manifest);
+
+function handleFileLoad(event) {
+    var id = event.item.id;
+    var result = loader.getResult(id);
+    ship = new createjs.Bitmap(result);
+    ship.x = (stageWidth / 2) - shipWidth;
+    ship.y = stageHeight - shipHeight;
+    ship.regX = shipWidth/2;
+    ship.regY = shipHeight/2;
+}
+
+function handleComplete() {
+    stage.addChild(ship);
+    text = new createjs.Text("Click To Activate", "20px Arial", "#000000");
+    text.x = 200;
+    text.y = stageHeight / 2;
+    stage.addChild(text);
+    stage.update();
+}
+
+stage.onMouseDown = function () {
+    stage.removeChild(text);
+    createjs.Ticker.addEventListener("tick", tick);
+};
+
+function tick(event) {
+   var xDistance = stage.getStage().mouseX - ship.x;
+   var yDistance = stage.getStage().mouseY - ship.y;
+   var distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+    if (distance > 1) {
+        ship.x += xDistance * easingAmount;
+        ship.y += yDistance * easingAmount;
+    }
+    stage.update();
+}
+}//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <canvas id="Canvas" width="550" height="600"></canvas>
+  
+</body>
+
+
+</html>
+

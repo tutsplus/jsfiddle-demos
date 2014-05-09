@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Fisher-Yates Shuffle Demo 1 - jsFiddle demo by Gamedevtuts</title>
+  
+  <script type='text/javascript' src='jquery-1.9.1.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="result-light.css">
+  
+    
+      <script type='text/javascript' src="http://fonts.googleapis.com/css?family=Maven+Pro' rel='stylesheet' type='text/css"></script>
+    
+  
+  <style type='text/css'>
+    #wrapper{
+    background-image:url('paper.png');
+    width:600px;
+    height:100px;
+    font-family: 'Maven Pro', sans-serif;
+}
+
+#outer{
+    width:600px;
+    height:100px;    
+}
+
+.block {
+    width:30px;
+    height:20px;
+    display:inline;
+    padding:3px;
+}
+#holder, #current,#toSwap{
+    width:100%;
+   text-align:center;
+}
+#doShuffle{
+margin-left:45%;    
+}
+
+
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+$(window).load(function(){
+//Paper image from http://subtlepatterns.com/textured-paper/
+
+$(function () {
+     var alphaArray = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+    for (var i = 0; i <12; i++) {
+        $("#holder").append('<div class="block">'+(alphaArray[i])+'</div>');
+
+    }
+  var theLength = alphaArray.length;
+  var toSwap;
+
+    $("#doShuffle").on("click", setupSwap );
+    function setupSwap(){
+        $("#holder").children().css("color","black");
+         theLength--;
+        toSwap = Math.floor(Math.random()*theLength);
+        var currentText =   $("#holder").find("div:eq("+theLength+")").text();        $("#current").text("Current Item Being Processed: " + (theLength+1) + " of " + alphaArray.length + " (" + currentText + ")");
+        var toSwapText =  $("#holder").find("div:eq("+toSwap+")").text();        
+        $("#toSwap").text("Item "+currentText+" will be swapped with item "+ toSwapText);
+
+             $("#holder").find("div:eq("+theLength+")").css( "color", "red" );
+             $("#holder").find("div:eq("+toSwap+")").css( "color", "blue" );        
+            setTimeout(doSwap,2000);
+        
+    }
+    function doSwap(){
+        var theOldLength = $("#holder").find("div:eq("+theLength+")").text();
+        var theOldSwap = $("#holder").find("div:eq("+toSwap+")").text();
+        $("#holder").find("div:eq("+theLength+")").text(theOldSwap).css("color","blue");
+        $("#holder").find("div:eq("+toSwap+")").text(theOldLength).css("color","red"); 
+        if(theLength>1){
+          setTimeout(setupSwap,2000);
+           
+        }else{
+          $("#holder").children().css("color","black");
+           $("#current").text("");
+           $("#toSwap").text("");
+           theLength = alphaArray.length;
+        }
+    }
+});
+});//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <div id="wrapper">
+<div id="holder"></div>
+<div id="current"></div>
+<div id="toSwap"></div>
+<button id="doShuffle">Shuffle</button>
+</div>
+  
+</body>
+
+
+</html>
+

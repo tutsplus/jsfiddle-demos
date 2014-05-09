@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo</title>
+  
+  <script type='text/javascript' src='jquery-git2.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="result-light.css">
+  
+  <style type='text/css'>
+    *{
+    font-family: 12px Helvetica;
+}
+td{
+    border:1px solid grey;
+    background-color: white;
+    width:50%;
+}
+table{
+    width:100%;
+    background-color: grey;
+}
+#screen{
+
+    padding: 0px;
+    border:1px solid black;
+    width: 150px;
+    height: 100px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 100px;
+}
+#indicator{
+    width:10px;
+    height:5px;
+}
+#screenbg{
+    position:relative;
+    left:-20px;
+    top:-20px;
+    z-index:-1;
+}
+#arrow{
+    position:relative;
+    left:-8px;
+    top:-4px;
+}
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+$(window).load(function(){
+$(document).ready(function(){
+    $(document).mousemove(function(e){
+
+        rawMouse = {left: e.pageX, top: e.pageY}
+        scrSize = {width: $('#screen').width(),
+                  height:$('#screen').height()}
+        
+        //change coordinate space to our virtual screen
+        screenPosition = $('#screen').offset();
+        screenMouse = {left:rawMouse.left - screenPosition.left,
+                       top: rawMouse.top  - screenPosition.top};
+        
+        //change coordinate space again to center of screen
+        centerMouse = {
+            left:screenMouse.left - (scrSize.width/2),
+            top: screenMouse.top  - (scrSize.height/2)};
+        
+        //find rotation 
+        rotation = Math.atan2(centerMouse.top,centerMouse.left);
+        rotation = rotation * 180/Math.PI; //rad2deg
+        
+        //rotate indicator. Little bit of browser overkill.
+        $('#indicator').css({ WebkitTransform: 'rotate(' + rotation + 'deg)'});
+        $('#indicator').css({ '-ms-transform': 'rotate(' + rotation + 'deg)'});
+        $('#indicator').css({ '-webkit-transform': 'rotate(' + rotation + 'deg)'});
+        $('#indicator').css({ '-moz-transform': 'rotate(' + rotation + 'deg)'});
+        
+        //find slope
+        slope = centerMouse.top/centerMouse.left;
+        
+        //for a bit of padding use a smaller screen size
+        var padding = 30;
+        padSize = {width: scrSize.width-padding,
+                  height:scrSize.height-padding};
+        
+        //calculate indicator position
+        if(centerMouse.top<0){//top of screen
+            indicatorPos = {left:(-padSize.height/2)/slope,
+                           top:-padSize.height/2}
+        }else{ // bottom of screen
+            indicatorPos = {left:(padSize.height/2)/slope,
+                           top:padSize.height/2}
+        }
+        
+        if(indicatorPos.left<-padSize.width/2){//left side
+            indicatorPos = {left:-padSize.width/2,
+                           top:  slope * -padSize.width/2}
+        }else if(indicatorPos.left>padSize.width/2){//right side
+            indicatorPos = {left:padSize.width/2,
+                           top:  slope * padSize.width/2}
+        }
+        
+        $('#screenMouse').html(screenMouse.left+', '+screenMouse.top);
+        $('#centerMouse').html(centerMouse.left+', '+centerMouse.top);
+                
+        $('#rotation').html(Math.round(rotation));
+        $('#slope').html(Math.round(slope * 100) / 100);
+        
+        $('#indicatorPos').html(Math.round(indicatorPos.left)
+                                +', '+Math.round(indicatorPos.top));
+        
+        //change coordinate position back to original space
+        indicatorPos = {left:indicatorPos.left + screenPosition.left + (scrSize.width/2),
+                        top: indicatorPos.top + screenPosition.top + (scrSize.height/2)}
+        
+        $('#indicator').offset(indicatorPos);
+    }); 
+})
+});//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <table id=info>
+    <tr><td>Mouse position on screen</td><td id=screenMouse></td></tr>
+    <tr><td>Mouse position from center</td><td id=centerMouse></td></tr>
+    <tr><td>Rotation</td><td id=rotation></td></tr>
+    <tr><td>Slope</td><td id=slope></td></tr>
+    <tr><td>Indicator Postion</td><td id=indicatorPos></td></tr>
+</table>
+
+        <div id="screen">
+<div id="screenbg"><img src="http://cdn.tutsplus.com/gamedev.tutsplus.com/authors/james-smith/offscreen_indicators_screen.png" /></div>
+</div>
+<div id=indicator>
+    <div id=arrow><img src="http://cdn.tutsplus.com/gamedev.tutsplus.com/authors/james-smith/offscreen_indicators_arrow.png" />
+    </div>
+</div>
+
+
+  
+</body>
+
+
+</html>
+

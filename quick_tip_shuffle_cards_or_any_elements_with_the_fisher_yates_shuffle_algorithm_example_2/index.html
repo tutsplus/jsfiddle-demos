@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Fisher-Yates Shuffle Demo 2 - jsFiddle demo by Gamedevtuts</title>
+  
+  <script type='text/javascript' src='jquery-1.9.1.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="result-light.css">
+  
+  <style type='text/css'>
+    #holder img{
+    padding:3px;
+}
+#shuffle{
+    margin-left:50%;
+}
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+$(window).load(function(){
+//Card images from https://code.google.com/p/vectorized-playing-cards/
+
+$(function () {
+    var serverString = "http://source.tutsplus.com/gamedev/authors/JamesTyner/FisherYates/src/images/";
+    var cards = [];
+    var i;
+    for (i = 1; i <= 13; i++) {
+        cards.push("c" + i);
+    }
+    //console.log(cards);
+    
+    function drawCards(){
+      $("#holder").empty();
+        for (i = 0; i < cards.length; i++) {
+        $("#holder").append("<img src='http://jsfiddle.net/Gamedevtuts/pvVhy/show/&quot;&#32;+&#32;serverString&#32;+&#32;cards[i]&#32;+&#32;&quot;.png' />");
+    }
+    }
+    drawCards();
+    $("#shuffle").on('click', shuffle);
+
+    var theLength = cards.length - 1;
+    var toSwap;
+    var tempCard;
+
+    function shuffle() {
+        console.log("Cards before shuffle:" + cards);
+        for (i = theLength; i > 0; i--) {
+            toSwap = Math.floor(Math.random() * i);
+            tempCard = cards[i];
+            cards[i] = cards[toSwap];
+            cards[toSwap] = tempCard;
+        }
+        console.log("Cards after shuffle: "+cards);
+        drawCards();
+    }
+});
+});//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <div id="holder"></div>
+<button id="shuffle">Shuffle</button>
+  
+</body>
+
+
+</html>
+

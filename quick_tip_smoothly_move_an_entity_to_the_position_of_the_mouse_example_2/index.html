@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo by Gamedevtuts</title>
+  
+  <script type='text/javascript' src='createjs-2013.02.12.min.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="result-light.css">
+  
+    
+      <script type='text/javascript' src="collision.js"></script>
+    
+  
+    
+      <script type='text/javascript' src="spritestrings.js"></script>
+    
+  
+  <style type='text/css'>
+    
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+window.onload=function(){
+var canvas = document.getElementById("Canvas");
+var ship;
+var ufo;
+var bullet;
+var background;
+var stage;
+var assets;
+var loader;
+var stageHeight = 600;
+var stageWidth = 600;
+var shipHeight = 64;
+var shipWidth = 64;
+var easingAmount = 0.15;
+var text;
+var enemyArray = [];
+var bulletArray = [];
+var gameStarted = false;
+var alphaThreshold = 0.75;
+stage = new createjs.Stage(canvas);
+ship = new createjs.Bitmap(shipString);
+ship.x = (stageWidth / 2) - shipWidth;
+ship.y = stageHeight - shipHeight;
+ship.regX = shipWidth/2;
+ship.regY = shipHeight/2;
+ufo = new createjs.Bitmap(ufoString);
+bullet = new createjs.Bitmap(bulletString);
+background = new createjs.Bitmap(backgroundString);
+stage.addChild(background);
+stage.addChild(ship);
+text = new createjs.Text("Click To Activate", "20px Arial", "#FFFFFF");
+text.x = 200;
+text.y = stageHeight / 2;
+stage.addChild(text);
+stage.update();
+
+stage.onMouseDown = function () {
+    stage.removeChild(text);
+    if (!gameStarted) {
+      
+        createjs.Ticker.addEventListener("tick", tick);
+
+    } else {
+        var tempBullet = bullet.clone();
+        tempBullet.y = ship.y - shipHeight;
+        tempBullet.x = ship.x;
+        bulletArray.push(tempBullet);
+        stage.addChild(tempBullet);
+
+    }
+    gameStarted = true;
+};
+
+function moveEnemys() {
+    if (enemyArray.length > 0) {
+        for (var i = enemyArray.length-1; i >=0; i--) {
+            enemyArray[i].y += 5;
+            if(enemyArray[i].y > stageHeight){
+               stage.removeChild(enemyArray[i]);
+               enemyArray.splice(i,1);
+            }
+        }
+    }
+
+}
+
+function moveBullets() {
+    if (bulletArray.length > 0) {
+        for (var i = bulletArray.length-1; i >=0; i--) {
+            bulletArray[i].y -= 5;
+            if(bulletArray[i].y < -30){
+                stage.removeChild(bulletArray[i]);
+                bulletArray.splice(i,1);
+            }
+        }
+    }
+
+}
+
+function tick(event) {
+    var xVel = stage.getStage().mouseX - ship.x;
+    var yVel = stage.getStage().mouseY - ship.y;
+    var distance = Math.sqrt(xVel * xVel + yVel * yVel);
+    if (distance >= 1) {
+        ship.x += xVel * easingAmount;
+        ship.y += yVel * easingAmount;
+    }
+    generateEnemy();
+    moveEnemys();
+    moveBullets();
+
+
+    if (enemyArray.length > 0 && bulletArray.length > 0) {
+        for (var i = enemyArray.length - 1; i >= 0; i--) {
+            for (var j = bulletArray.length - 1; j >= 0; j--) {
+                var collision = ndgmr.checkPixelCollision(enemyArray[i], bulletArray[j],alphaThreshold);
+                if(collision){
+                    stage.removeChild(enemyArray[i]);
+                    enemyArray.splice(i, 1);
+                    stage.removeChild(bulletArray[j]);
+                    bulletArray.splice(j, 1);                    
+                }
+            }
+        }
+    }
+
+
+    stage.update();
+}
+
+function generateEnemy() {
+    var randomChance = Math.floor(Math.random() * 100);
+    if (randomChance < 3) {
+        var tempEnemy = ufo.clone();
+        tempEnemy.y = 0 - shipHeight;
+        tempEnemy.x = Math.floor(Math.random() * (stageWidth - shipWidth));
+        enemyArray.push(tempEnemy);
+        stage.addChild(tempEnemy);
+
+    }
+}
+}//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <canvas id="Canvas" width="600" height="600"></canvas>
+  
+</body>
+
+
+</html>
+

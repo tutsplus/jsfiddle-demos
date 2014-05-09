@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>TweenJS - jsFiddle demo by jamestyner</title>
+  
+  <script type='text/javascript' src='createjs-2013.09.25.combined.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="result-light.css">
+  
+    
+      <script type='text/javascript' src="createimgstring.js"></script>
+    
+  
+  <style type='text/css'>
+    
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+window.onload=function(){
+var canvas = document.getElementById("testCanvas");
+var stage = new createjs.Stage(canvas);
+var logo;
+var text;
+
+
+
+function setup(){
+    logo = new createjs.Bitmap(logoImage);
+    logo.x = 300;
+    logo.y = -70;
+    text = new createjs.Text("Tween JS Tutorial", "50px Arial", "#000000");
+    text.alpha = 0;
+    text.x = 400 - text.getMeasuredWidth()/2;
+    text.y = 300 - text.getMeasuredHeight()/2;
+    stage.addChild(logo,text);
+    stage.on("stagemousedown",tweenLogo,null,false);
+    createjs.Ticker.addEventListener("tick", tick);
+
+}
+function tweenLogo(){
+    createjs.Tween.get(logo)
+    .to({y:200,scaleX:2.0,scaleY:2.0},1500)
+    .wait(1000)
+    .call(tweenText);
+    
+}
+function tick(){
+    
+    stage.update();
+    
+}
+function tweenText(){
+    stage.removeChild(logo);
+     createjs.Tween.get(text)
+     .to({alpha:1},1500)
+    .wait(400)
+     .to({rotation:360},1500)
+     .wait(1000)
+     .to({x:-800},300);
+    
+   
+    
+}
+setup()
+}//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <canvas id="testCanvas" width="600" height="600"></canvas>
+
+  
+</body>
+
+
+</html>
+
