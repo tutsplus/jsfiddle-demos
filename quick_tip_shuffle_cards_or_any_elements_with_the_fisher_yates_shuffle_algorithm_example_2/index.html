@@ -27,7 +27,6 @@ $(window).load(function(){
 //Card images from https://code.google.com/p/vectorized-playing-cards/
 
 $(function () {
-    var serverString = "http://source.tutsplus.com/gamedev/authors/JamesTyner/FisherYates/src/images/";
     var cards = [];
     var i;
     for (i = 1; i <= 13; i++) {
@@ -38,7 +37,7 @@ $(function () {
     function drawCards(){
       $("#holder").empty();
         for (i = 0; i < cards.length; i++) {
-        $("#holder").append("<img src='http://jsfiddle.net/Gamedevtuts/pvVhy/show/&quot;&#32;+&#32;serverString&#32;+&#32;cards[i]&#32;+&#32;&quot;.png' />");
+        $("#holder").append("<img src='" + cards[i] + ".png' />");
     }
     }
     drawCards();
